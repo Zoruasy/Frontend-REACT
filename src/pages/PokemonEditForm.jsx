@@ -18,7 +18,7 @@ function PokemonDetail() {
 
     async function loadPokemon() {
         try {
-            const response = await fetch(`http://145.24.223.41:8000/pokemons/${id}`, {
+            const response = await fetch(`http://localhost:8000/pokemons/${id}`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',

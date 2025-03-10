@@ -4,7 +4,7 @@ import PokemonList from "./pages/PokemonList.jsx";
 import PokemonCreateForm from "./pages/PokemonCreateForm.jsx";
 import PokemonDetail from "./pages/PokemonDetail.jsx";
 import PokemonEditForm from "./pages/PokemonEditForm.jsx";
-
+import Home from "./pages/Home.jsx";
 
 const router = createBrowserRouter([
     {
@@ -12,19 +12,23 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             {
-                path: '/pokemons',
+                index: true,
+                element: <Home />
+            },
+            {
+                path: 'pokemons',
                 element: <PokemonList />
             },
             {
-                path: '/pokemons/create',
+                path: 'pokemons/create',
                 element: <PokemonCreateForm />
             },
             {
-                path: '/pokemons/:id',
+                path: 'pokemons/:id',
                 element: <PokemonDetail />
             },
             {
-                path: '/pokemons/:id/edit',
+                path: 'pokemons/:id/edit',
                 element: <PokemonEditForm />
             },
         ]

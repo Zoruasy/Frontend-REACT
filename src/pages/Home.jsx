@@ -1,31 +1,49 @@
-import React from 'react';
-import { useNavigate } from 'react-router'; // Gebruik useNavigate van react-router
+import { useNavigate } from "react-router"
 
-function Home() {
-    const navigate = useNavigate(); // Haal navigate op voor navigatie
+export default function Home() {
+    const navigate = useNavigate()
 
     const navigateToPokemons = () => {
-        navigate('/pokemons'); // Navigeer naar de Pokémon lijst
-    };
+        navigate("/pokemons")
+    }
 
     return (
-        <div className="max-w-3xl mx-auto px-4 py-12 text-center bg-gradient-to-r from-yellow-400 to-red-500 rounded-lg shadow-lg">
-            <h1 className="text-5xl font-extrabold text-white mb-6">
-                Welkom op m'n awesome pokemon website
-            </h1>
-            <p className="text-gray-100 mb-8 text-lg">
-                Beheer je Pokémon collectie met deze applicatie.
-            </p>
-            <div className="flex justify-center">
-                <button
-                    onClick={navigateToPokemons} // Klik om naar de Pokémon lijst te gaan
-                    className="bg-black text-yellow-400 px-8 py-4 rounded-full text-lg font-semibold transition-all transform hover:bg-yellow-400 hover:text-black hover:scale-105"
-                >
-                    Bekijk alle Pokémon
-                </button>
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+            <div className="w-full max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
+                {/* Continuous Pokéball-inspired design */}
+                <div className="relative">
+                    <div className="bg-red-600 h-32 border-b-8 border-black"></div>
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-32 h-32 bg-white rounded-full border-8 border-black flex items-center justify-center z-10">
+                        <div className="w-16 h-16 bg-white rounded-full border-4 border-black"></div>
+                    </div>
+                </div>
+
+                {/* Main content */}
+                <div className="p-8 pt-20 text-center">
+                    <h1
+                        className="text-6xl font-extrabold mb-6 text-yellow-400"
+                        style={{ textShadow: "2px 2px 0 #3B4CCA, 4px 4px 0 rgba(0,0,0,0.1)" }}
+                    >
+                        Pokémon
+                    </h1>
+
+                    <p className="text-blue-800 mb-10 text-xl">
+                        Welkom bij mijn Pokémon verzameling! Hier kun je mijn favoriete Pokémon ontdekken en nieuwe toevoegen. :)
+                    </p>
+
+                    <button
+                        onClick={navigateToPokemons}
+                        className="bg-yellow-400 text-blue-800 px-10 py-4 rounded-full text-xl font-bold transition-all hover:bg-blue-600 hover:text-yellow-400 border-4 border-blue-800 shadow-lg transform hover:-translate-y-1 hover:scale-105"
+                    >
+                        Ontdek alle Pokémon
+                        <span className="ml-2 inline-block">→</span>
+                    </button>
+                </div>
+
+                {/* Bottom part of the Pokéball */}
+                <div className="bg-white h-16 border-t-8 border-black"></div>
             </div>
         </div>
-    );
+    )
 }
 
-export default Home;

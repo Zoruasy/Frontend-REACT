@@ -1,117 +1,101 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-function CreatePokemon() {
-    const [pokemonData, setPokemonData] = useState({
+function PokemonCreateForm({ newItemCreated }) {
+    const [formData, setFormData] = useState({
         name: '',
         type: '',
-        region: '',
+        location: '',
     });
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
 
-    // Functie om de input in de state bij te werken
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setPokemonData({
-            ...pokemonData,
-            [name]: value,
+        setFormData({
+            ...formData,
+            [name]: value
         });
     };
 
-    // Functie om het formulier te versturen
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError(null);
-        setSuccess(false);
-
+    async function createPokemon() {
         try {
-            const response = await fetch('/pokemons', {
+            const response = await fetch('http://localhost:8000/pokemons', { // Aangepast naar localhost
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(pokemonData),
+                body: JSON.stringify({
+                    name: formData.name,
+                    type: formData.type,
+                    location: formData.location
+                })
             });
 
-            if (!response.ok) {
-                throw new Error('Er is iets misgegaan bij het toevoegen van de Pokémon');
+            const data = await response.json();
+            console.log(data);
+            if (typeof newItemCreated === "function") {
+                newItemCreated(data);
             }
-
-            setSuccess(true);  // Melding van succes
-            setPokemonData({
-                name: '',
-                type: '',
-                region: '', // Reset region naar lege waarde
-            });
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
+        } catch (error) {
+            console.error('Er is een fout opgetreden:', error);
         }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        createPokemon();
     };
 
     return (
-        <div className="p-8 max-w-3xl mx-auto bg-gray-50 rounded-md shadow-md">
-            <h1 className="text-2xl font-bold mb-6 text-center">Create a New Pokémon</h1>
+        <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-md space-y-4">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Create a New Pokémon</h2>
 
-            {success && <p className="text-green-500 text-center mb-4">Pokémon toegevoegd!</p>}
-            {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+            <div className="flex flex-col">
+                <label htmlFor="name" className="mb-2 font-medium text-gray-700">Name:</label>
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="border rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                    placeholder="Enter the Pokémon name"
+                />
+            </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block font-medium mb-2">Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={pokemonData.name}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded-md"
-                        placeholder="Pokémon Name"
-                        required
-                    />
-                </div>
+            <div className="flex flex-col">
+                <label htmlFor="type" className="mb-2 font-medium text-gray-700">Type:</label>
+                <input
+                    type="text"
+                    id="type"
+                    name="type"
+                    value={formData.type}
+                    onChange={handleInputChange}
+                    className="border rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                    placeholder="Enter the Pokémon type"
+                />
+            </div>
 
-                <div>
-                    <label className="block font-medium mb-2">Type</label>
-                    <input
-                        type="text"
-                        name="type"
-                        value={pokemonData.type}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded-md"
-                        placeholder="Pokémon Type"
-                        required
-                    />
-                </div>
+            <div className="flex flex-col">
+                <label htmlFor="location" className="mb-2 font-medium text-gray-700">Location:</label>
+                <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleInputChange}
+                    className="border rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                    placeholder="Enter the Pokémon location"
+                />
+            </div>
 
-                <div>
-                    <label className="block font-medium mb-2">Region</label>
-                    <input
-                        type="text"
-                        name="region"
-                        value={pokemonData.region}
-                        onChange={handleInputChange}
-                        className="w-full p-2 border rounded-md"
-                        placeholder="Pokémon Region (e.g., Kanto, Johto)"
-                        required
-                    />
-                </div>
-
-                <div className="flex justify-center">
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-                    >
-                        {loading ? 'Adding...' : 'Add Pokémon'}
-                    </button>
-                </div>
-            </form>
-        </div>
+            <button
+                type="submit"
+                className="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+            >
+                Submit
+            </button>
+        </form>
     );
 }
 
-export default CreatePokemon;
+export default PokemonCreateForm;
