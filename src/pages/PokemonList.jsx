@@ -127,8 +127,8 @@ function PokemonList() {
                         <button
                             onClick={() => handlePageChange(currentPage - 1)}
                             disabled={currentPage === 1 || isLoading}
-                            className={`px-6 py-3 rounded-lg transition-all ${
-                                currentPage === 1 || isLoading ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"
+                            className={`px-6 py-3 rounded-lg transition-all bg-blue-800 text-white hover:bg-blue-900 ${
+                                currentPage === 1 || isLoading ? "opacity-50 cursor-not-allowed" : ""
                             }`}
                             aria-label="Previous page"
                         >
@@ -142,8 +142,8 @@ function PokemonList() {
                         <button
                             onClick={() => handlePageChange(currentPage + 1)}
                             disabled={currentPage === Math.ceil(filteredPokemons.length / ITEMS_PER_PAGE) || isLoading}
-                            className={`px-6 py-3 rounded-lg transition-all ${
-                                currentPage === Math.ceil(filteredPokemons.length / ITEMS_PER_PAGE) || isLoading ? "bg-gray-300 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-blue-700"
+                            className={`px-6 py-3 rounded-lg transition-all bg-blue-800 text-white hover:bg-blue-900 ${
+                                currentPage === Math.ceil(filteredPokemons.length / ITEMS_PER_PAGE) || isLoading ? "opacity-50 cursor-not-allowed" : ""
                             }`}
                             aria-label="Next page"
                         >

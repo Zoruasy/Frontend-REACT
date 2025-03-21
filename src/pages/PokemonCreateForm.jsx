@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function PokemonCreateForm({ newItemCreated }) {
+function PokemonCreateForm({ newItemCreated = () => {} }) {
     const [formData, setFormData] = useState({
         name: '',
         type: '',
@@ -8,6 +8,7 @@ function PokemonCreateForm({ newItemCreated }) {
     });
 
     const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState("");
     const [nameError, setNameError] = useState("");
 
     const handleInputChange = (e) => {
@@ -28,6 +29,8 @@ function PokemonCreateForm({ newItemCreated }) {
     async function createPokemon() {
         try {
             setError(null);
+            setSuccessMessage("");
+
             const response = await fetch('http://localhost:8000/pokemons', {
                 method: 'POST',
                 headers: {
@@ -44,7 +47,9 @@ function PokemonCreateForm({ newItemCreated }) {
             const data = await response.json();
             console.log(data);
             newItemCreated();
+            setSuccessMessage("Succesvol toegevoegd");
             setFormData({ name: '', type: '', location: '' });
+
         } catch (error) {
             console.error('Er is een fout opgetreden:', error);
             setError('Failed to create Pokémon. Please try again.');
@@ -106,6 +111,7 @@ function PokemonCreateForm({ newItemCreated }) {
             </div>
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
+            {successMessage && <p className="text-green-500 text-sm font-bold">{successMessage}</p>} {/*  Succesbericht  */}
 
             <button
                 type="submit"
@@ -118,6 +124,7 @@ function PokemonCreateForm({ newItemCreated }) {
             >
                 Submit
             </button>
+
         </form>
     );
 }
