@@ -10,7 +10,6 @@ export default function Home() {
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
             <div className="w-full max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
-                {/* Continuous Pokéball-inspired design */}
                 <div className="relative">
                     <div className="bg-red-600 h-32 border-b-8 border-black"></div>
                     <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-32 h-32 bg-white rounded-full border-8 border-black flex items-center justify-center z-10">

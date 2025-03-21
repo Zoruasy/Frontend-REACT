@@ -11,10 +11,11 @@ function PokemonDetail() {
         type: '',
         location: ''
     });
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         loadPokemon();
-    }, []);
+    }, [id]);
 
     async function loadPokemon() {
         try {
@@ -26,6 +27,10 @@ function PokemonDetail() {
                 }
             });
 
+            if (!response.ok) {
+                throw new Error('Pokémon niet gevonden');
+            }
+
             const data = await response.json();
             setPokemon(data);
             setFormData({
@@ -33,8 +38,10 @@ function PokemonDetail() {
                 type: data.type,
                 location: data.location
             });
+            setError(null); // Reset error state if successful
         } catch (error) {
-            console.error('Er is een fout opgetreden:', error);
+            setError(error.message);
+            setPokemon(null); // Clear pokemon state if there's an error
         }
     }
 
@@ -60,7 +67,7 @@ function PokemonDetail() {
 
             if (response.ok) {
                 setIsEditing(false);
-                loadPokemon();
+                loadPokemon(); // Reload the updated Pokémon details
             } else {
                 console.error('Update failed');
             }
@@ -68,6 +75,22 @@ function PokemonDetail() {
             console.error('Er is een fout opgetreden:', error);
         }
     };
+
+    // 404 afhandeling
+    if (error) {
+        return (
+            <div className="text-center text-red-600">
+                <h1>404: Pokémon niet gevonden!</h1>
+                <p>{error}</p>
+                <button
+                    onClick={() => navigate('/')}
+                    className="bg-yellow-400 text-blue-800 px-4 py-2 rounded-full text-lg font-bold transition-all hover:bg-blue-600 hover:text-yellow-400 border-4 border-blue-800 shadow-lg transform hover:-translate-y-1 hover:scale-105"
+                >
+                    Terug naar startpagina
+                </button>
+            </div>
+        );
+    }
 
     if (!pokemon) {
         return <p>Loading...</p>;
@@ -84,7 +107,7 @@ function PokemonDetail() {
                     <div className="flex gap-2">
                         <button
                             onClick={() => setIsEditing(true)}
-                            className="bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                            className="bg-yellow-400 text-blue-800 px-2 py-1 rounded-full text-lg font-bold transition-all hover:bg-blue-600 hover:text-yellow-400 border-4 border-blue-800 shadow-lg transform hover:-translate-y-1 hover:scale-105"
                         >
                             Edit Pokémon
                         </button>
@@ -133,7 +156,7 @@ function PokemonDetail() {
                     <div className="flex gap-2">
                         <button
                             type="submit"
-                            className="bg-green-600 text-white font-medium py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+                            className="bg-yellow-400 text-blue-800 px-4 py-2 rounded-full text-lg font-bold transition-all hover:bg-blue-600 hover:text-yellow-400 border-4 border-blue-800 shadow-lg transform hover:-translate-y-1 hover:scale-105"
                         >
                             Save Changes
                         </button>
@@ -143,7 +166,7 @@ function PokemonDetail() {
                                 setIsEditing(false);
                                 loadPokemon();
                             }}
-                            className="bg-gray-600 text-white font-medium py-2 px-4 rounded-md hover:bg-gray-700 transition-colors"
+                            className="bg-yellow-400 text-blue-800 px-2 py-1 rounded-full text-lg font-bold transition-all hover:bg-blue-600 hover:text-yellow-400 border-4 border-blue-800 shadow-lg transform hover:-translate-y-1 hover:scale-105"
                         >
                             Cancel
                         </button>

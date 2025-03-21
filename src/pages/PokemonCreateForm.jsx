@@ -7,8 +7,18 @@ function PokemonCreateForm({ newItemCreated }) {
         location: '',
     });
 
+    const [error, setError] = useState(null);
+    const [nameError, setNameError] = useState("");
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
+        if (name === "name") {
+            // Alleen letters en spaties toestaan
+            const isValid = /^[A-Za-z\s]+$/.test(value);
+            setNameError(isValid ? "" : "Name can only contain letters and spaces.");
+        }
+
         setFormData({
             ...formData,
             [name]: value
@@ -17,32 +27,35 @@ function PokemonCreateForm({ newItemCreated }) {
 
     async function createPokemon() {
         try {
-            const response = await fetch('http://localhost:8000/pokemons', { // Aangepast naar localhost
+            setError(null);
+            const response = await fetch('http://localhost:8000/pokemons', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    name: formData.name,
-                    type: formData.type,
-                    location: formData.location
-                })
+                body: JSON.stringify(formData)
             });
+
+            if (!response.ok) {
+                throw new Error("Failed to create Pokémon");
+            }
 
             const data = await response.json();
             console.log(data);
-            if (typeof newItemCreated === "function") {
-                newItemCreated(data);
-            }
+            newItemCreated();
+            setFormData({ name: '', type: '', location: '' });
         } catch (error) {
             console.error('Er is een fout opgetreden:', error);
+            setError('Failed to create Pokémon. Please try again.');
         }
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        createPokemon();
+        if (!nameError) {
+            createPokemon();
+        }
     };
 
     return (
@@ -59,7 +72,9 @@ function PokemonCreateForm({ newItemCreated }) {
                     onChange={handleInputChange}
                     className="border rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none"
                     placeholder="Enter the Pokémon name"
+                    aria-label="Pokémon Name"
                 />
+                {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
             </div>
 
             <div className="flex flex-col">
@@ -72,6 +87,7 @@ function PokemonCreateForm({ newItemCreated }) {
                     onChange={handleInputChange}
                     className="border rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none"
                     placeholder="Enter the Pokémon type"
+                    aria-label="Pokémon Type"
                 />
             </div>
 
@@ -85,12 +101,20 @@ function PokemonCreateForm({ newItemCreated }) {
                     onChange={handleInputChange}
                     className="border rounded-md p-2 focus:ring-2 focus:ring-blue-500 outline-none"
                     placeholder="Enter the Pokémon location"
+                    aria-label="Pokémon Location"
                 />
             </div>
 
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+
             <button
                 type="submit"
-                className="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+                disabled={!formData.name || !formData.type || !formData.location || nameError}
+                className={`px-2 py-2 rounded-full text-lg font-bold transition-all 
+                    ${formData.name && formData.type && formData.location && !nameError ?
+                    "bg-yellow-400 text-blue-800 hover:bg-blue-600 hover:text-yellow-400 border-4 border-blue-800 shadow-lg transform hover:-translate-y-1 hover:scale-105"
+                    : "bg-gray-300 text-gray-600 cursor-not-allowed"}
+                `}
             >
                 Submit
             </button>

@@ -1,8 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router"; // Gebruik 'useNavigate' van react-router voor navigatie
+import { useNavigate } from "react-router";
 
 function Pokemon({ pokemon, pokemonDeleted }) {
-    const navigate = useNavigate(); // Hook voor navigatie
+    const navigate = useNavigate();
 
     const deletePokemon = async (id) => {
         try {
@@ -14,23 +14,28 @@ function Pokemon({ pokemon, pokemonDeleted }) {
             });
 
             if (result.status === 204) {
-                pokemonDeleted();
+                pokemonDeleted(id); // Geef het ID door om de lijst bij te werken
+                alert("Pokémon succesvol verwijderd!");
+            } else {
+                const errorText = await result.text(); // Lees de foutmelding van de server
+                alert(`Fout bij het verwijderen van de Pokémon: ${errorText}`);
             }
         } catch (e) {
             console.log(e);
+            alert("Er is een fout opgetreden bij het verwijderen van de Pokémon.");
         }
     };
 
     const viewDetails = () => {
-        navigate(`/pokemons/${pokemon.id}`); // Navigeer naar de detailpagina van deze Pokémon
+        navigate(`/pokemons/${pokemon.id}`);
     };
 
     return (
         <article className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
             <h1 className="text-3xl font-bold text-gray-800 mb-3">{pokemon.name}</h1>
             <button
-                onClick={viewDetails} // Navigeer naar de detailpagina van de Pokémon
-                className="font-bold text-green-800 hover:text-green-600 transition-colors duration-200"
+                onClick={viewDetails}
+                className="font-bold text-blue-800 hover:text-blue-600 transition-colors duration-200"
             >
                 Read more
             </button>
